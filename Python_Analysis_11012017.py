@@ -6,7 +6,7 @@ import re, os, ftplib, subprocess, glob, sys, shutil
 # This is important for executing the brew_installer.sh script.
 script_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(script_path)
-print(os.getcwd())
+# print(os.getcwd())
 
 # This will check to see if several important system programs are installed in hierarchical order
 # If they are not, then it executes a script to install them, may require user password. 
@@ -70,11 +70,14 @@ ref_cdna = glob.glob(pattern)
 ref_cdna = ref_cdna[0]
 
 # Find all the FASTQ files in the directory.
-# fastqs = glob.glob('*fastq.gz')
-# 
-# subprocess.call([salmon, index, '-t', fastq_dir + '/' + ref_cdna, '-i', fastq_dir + '/index', '-p', '4'])
-# for fastq in fastqs:
-# 	subprocess.call([salmon, quant, '-i', fastq_dir + '/index/', 
-# 	'-r', fastq_dir + '/' + fastq, 
-# 	'-p', '4', '-o', fastq_dir + '/' + 'quant' + '/' + fastq + '_quant', 
-# 	'--seqBias', '--gcBias', '-l', 'SF'])
+fastqs = glob.glob('*fastq.gz')
+
+subprocess.call([salmon, index, '-t', fastq_dir + '/' + ref_cdna, '-i', fastq_dir + '/index', '-p', '4'])
+for fastq in fastqs:
+	subprocess.call([salmon, quant, '-i', fastq_dir + '/index/', 
+	'-r', fastq_dir + '/' + fastq, 
+	'-p', '4', '-o', fastq_dir + '/' + 'quant' + '/' + fastq + '_quant', 
+	'--seqBias', '--gcBias', '-l', 'SF'])
+	
+#### Need to add in analysis portion next, but that will be significantly more difficult. ####
+
