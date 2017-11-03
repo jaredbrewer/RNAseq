@@ -1,5 +1,7 @@
 #!/usr/bin/env python3
 
+# macOS ONLY
+
 import re, os, ftplib, subprocess, glob, sys, shutil
 
 # This gives the script some self awareness. It finds itself and changes the working directory to that path (temporarily).
@@ -34,7 +36,8 @@ if not os.path.exists(fastq_dir + '/index/'):
         os.makedirs(fastq_dir + '/index/')
 if not os.path.exists(fastq_dir + '/quant/'):
         os.makedirs(fastq_dir + '/quant/')
-
+        
+phylum = input('Is your organism an [animal], [plant], [fungus] or [bacterium]? Input one of these options.')
 organism_name = input("Input the 'Genus species' for your reference organism:")
 org_split = organism_name.lower().split()
 org_dir = "_".join(org_split)
@@ -45,18 +48,65 @@ ref_cdna = 'ref_cdna.fa.gz'
 # This is where the user-friendliness comes in: use Ensembl's highly regular patterning - 
 # to fetch the needed file for supported organisms. 
 
-try: 
-	with ftplib.FTP('ftp.ensembl.org') as ftp:
-		ftp.login('anonymous')
-		ftp.cwd('/pub/release-90/fasta/{}/cdna/'.format(org_dir))
-		for filename in ftp.nlst(pattern): 
-			fhandle = open(filename, 'wb') 
-			ftp.retrbinary('RETR ' + filename, fhandle.write)
-			fhandle.close()
-except ftplib.error_perm:
-	text = colored("It appears that your organism is not supported. Try running again with a closely related species or check spelling.", 'red')
-	print(text)
-	sys.exit(1)
+# Vertebrates/Model Animals:
+if 'animal' in phylum: 
+	try: 
+		with ftplib.FTP('ftp.ensembl.org') as ftp:
+			ftp.login('anonymous')
+			ftp.cwd('/pub/release-90/fasta/{}/cdna/'.format(org_dir))
+			for filename in ftp.nlst(pattern): 
+				fhandle = open(filename, 'wb') 
+				ftp.retrbinary('RETR ' + filename, fhandle.write)
+				fhandle.close()
+	except ftplib.error_perm:
+		text = colored("It appears that your organism is not supported. Try running again with a closely related species or check spelling.", 'red')
+		print(text)
+		sys.exit(1)
+
+# Fungi: 
+if 'fungus' in phylum:
+	try: 
+		with ftplib.FTP('ftp.ensemblgenomes.org') as ftp:
+			ftp.login('anonymous')
+			ftp.cwd('/pub/fungi/release-37/fasta/{}/cdna/'.format(org_dir))
+			for filename in ftp.nlst(pattern): 
+				fhandle = open(filename, 'wb') 
+				ftp.retrbinary('RETR ' + filename, fhandle.write)
+				fhandle.close()
+	except ftplib.error_perm:
+		text = colored("It appears that your organism is not supported. Try running again with a closely related species or check spelling.", 'red')
+		print(text)
+		sys.exit(1)
+
+# Bacteria: 
+if 'bacterium' in phylum:
+	try: 
+		with ftplib.FTP('ftp.ensemblgenomes.org') as ftp:
+			ftp.login('anonymous')
+			ftp.cwd('/pub/bacteria/release-37/fasta/{}/cdna/'.format(org_dir))
+			for filename in ftp.nlst(pattern): 
+				fhandle = open(filename, 'wb') 
+				ftp.retrbinary('RETR ' + filename, fhandle.write)
+				fhandle.close()
+	except ftplib.error_perm:
+		text = colored("It appears that your organism is not supported. Try running again with a closely related species or check spelling.", 'red')
+		print(text)
+		sys.exit(1)
+	
+# Plants:
+if 'plant' in phylum:
+	try: 
+		with ftplib.FTP('ftp.ensemblgenomes.org') as ftp:
+			ftp.login('anonymous')
+			ftp.cwd('/pub/plant/release-37/fasta/{}/cdna/'.format(org_dir))
+			for filename in ftp.nlst(pattern): 
+				fhandle = open(filename, 'wb') 
+				ftp.retrbinary('RETR ' + filename, fhandle.write)
+				fhandle.close()
+	except ftplib.error_perm:
+		text = colored("It appears that your organism is not supported. Try running again with a closely related species or check spelling.", 'red')
+		print(text)
+		sys.exit(1)
 
 # Define some potentially useful variables that I can plug into subprocess.
 salmon = 'salmon'
