@@ -3,6 +3,7 @@
 # macOS ONLY
 
 import re, os, ftplib, subprocess, glob, sys, shutil
+from rpy2 import robjects
 
 # This gives the script some self awareness. It finds itself and changes the working directory to that path (temporarily).
 # This is important for executing the brew_installer.sh script.
@@ -20,7 +21,7 @@ if not shutil.which('xcode-select'):
 from termcolor import colored, cprint
 import Bio
 
-fastq_dir = input("Enter the directory of your FASTQ files:")
+fastq_dir = input("Enter the directory of your FASTQ files: ")
 fastq_dir = fastq_dir.strip()
 try:
 	os.chdir(fastq_dir)
@@ -37,8 +38,8 @@ if not os.path.exists(fastq_dir + '/index/'):
 if not os.path.exists(fastq_dir + '/quant/'):
         os.makedirs(fastq_dir + '/quant/')
         
-phylum = input('Is your organism an [animal], [plant], [fungus] or [bacterium]? Input one of these options.')
-organism_name = input("Input the 'Genus species' for your reference organism:")
+phylum = input('Is your organism an [animal], [plant], [fungus] or [bacterium]? Input one of these options: ')
+organism_name = input("Input the 'Genus species' for your reference organism: ")
 org_split = organism_name.lower().split()
 org_dir = "_".join(org_split)
 
@@ -49,7 +50,7 @@ ref_cdna = 'ref_cdna.fa.gz'
 # to fetch the needed file for supported organisms. 
 
 # Vertebrates/Model Animals:
-if 'animal' in phylum: 
+if 'ani' in phylum: 
 	try: 
 		with ftplib.FTP('ftp.ensembl.org') as ftp:
 			ftp.login('anonymous')
@@ -64,7 +65,7 @@ if 'animal' in phylum:
 		sys.exit(1)
 
 # Fungi: 
-if 'fungus' in phylum:
+if 'fu' in phylum:
 	try: 
 		with ftplib.FTP('ftp.ensemblgenomes.org') as ftp:
 			ftp.login('anonymous')
@@ -79,7 +80,7 @@ if 'fungus' in phylum:
 		sys.exit(1)
 
 # Bacteria: 
-if 'bacterium' in phylum:
+if 'bac' in phylum:
 	try: 
 		with ftplib.FTP('ftp.ensemblgenomes.org') as ftp:
 			ftp.login('anonymous')
@@ -94,7 +95,7 @@ if 'bacterium' in phylum:
 		sys.exit(1)
 	
 # Plants:
-if 'plant' in phylum:
+if 'pl' in phylum:
 	try: 
 		with ftplib.FTP('ftp.ensemblgenomes.org') as ftp:
 			ftp.login('anonymous')
@@ -130,4 +131,11 @@ for fastq in fastqs:
 	'--seqBias', '--gcBias', '-l', 'SF'])
 	
 #### Need to add in analysis portion next, but that will be significantly more difficult. ####
+# CUSTOM_COMMAND = ['brew', 'install', 'salmon']
 
+# sampleTable = input("Provide a properly formatted three-column sample table providing experimental details: ")
+# 
+# robjects.r('''setwd(''' + fastq_dir + ''')''')
+# robjects.r()
+# 
+# AutoSalm.R will be the script, but integration will be an adventure.

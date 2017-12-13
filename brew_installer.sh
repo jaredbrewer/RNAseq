@@ -8,5 +8,6 @@ xcode-select --install
 brew tap homebrew/science
 brew install salmon
 brew install python3
+brew install R
 pip3 install BioPython
 pip3 install termcolor
