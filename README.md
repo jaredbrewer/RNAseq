@@ -6,7 +6,8 @@ The user needs to provide:
 * FASTQ files
 * Sample table in the following format:
 
-	| sample |	condition |
-	| [filename] | 	[simple name] |
+	| sample | condition |
+	|--------|-----------|
+	| [filename] | [simple name] |
 
 The script will download the needed reference cDNA, make the index file, and analyze the provided FASTQ files. Then, the directory has to be provided in R to find the files and the script can be run for visual analysis in Sleuth.
