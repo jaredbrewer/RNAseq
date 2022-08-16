@@ -203,7 +203,7 @@ if 'SE' in read_type.upper():
     if not frags:
         frags = frag_len
     sd = input("If known, input the standard deviation of the fragment length (from FastQC). If not known, hit enter: ")
-    if not standard_dev:
+    if not sd:
         sd = standard_dev
     try:
         for read in fastqs:
