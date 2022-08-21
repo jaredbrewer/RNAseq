@@ -5,7 +5,7 @@
 xcode-select --install
 /bin/bash -c "$(curl -fsSL https://raw.githubusercontent.com/Homebrew/install/HEAD/install.sh)"
 
-brew tap homebrew/science
+# brew tap homebrew/science
 brew install python@3.10
 # brew install --cask R
 # brew install --cask rstudio
