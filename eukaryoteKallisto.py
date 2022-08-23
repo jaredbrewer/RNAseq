@@ -4,19 +4,27 @@
 
 # People need to have installed Anaconda for this to work. Presumably that can be done easily enough. Alt: execute another script first.
 
-import re, os, ftplib, subprocess, glob, sys, shutil
+import re, os, ftplib, subprocess, glob, sys, shutil, platform
 
 # This gives the script some self awareness. It finds itself and changes the working directory to that path (temporarily).
 # This is important for executing the brew_installer.sh script.
 script_path = os.path.dirname(os.path.realpath(__file__))
 os.chdir(script_path)
 
+# Welcome to the era of Apple Silicon.
+
+if "arm64" in platform.platform():
+    kallisto = "./kallisto_as"
+elif "x86_64" in platform.platform():
+    kallisto = "./kallisto_intel"
+
 # This will check to see if several important system programs are installed in hierarchical order
 # If they are not, then it executes a script to install them, may require user password.
 if not shutil.which('xcode-select'):
-    if not shutil.which('brew'):
-        if not shutil.which('./kallisto'):
-            subprocess.call(['./brew_installer.sh'])
+   if not shutil.which('brew'):
+      subprocess.run(['./brew_installer.sh'])
+   else:
+      subprocess.run(["brew", "install", "hdf5"])
 
 from termcolor import colored, cprint
 import Bio
