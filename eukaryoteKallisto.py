@@ -13,20 +13,22 @@ os.chdir(script_path)
 
 # Welcome to the era of Apple Silicon.
 
-if "arm64" in platform.platform():
-    kallisto = "./kallisto_as"
-elif "x86_64-i386" in platform.platform():
-    kallisto = "./kallisto_intel"
+if "macOS" in platform.platform():
+    # This will check to see if several important system programs are installed in sequential order.
+    # If they are not, then it executes a script to install them, may require user password.
+    if not shutil.which('xcode-select'):
+        subprocess.run(['./brew_installer.sh'])
+    if not shutil.which('brew'):
+        subprocess.run(['./brew_installer.sh'])
+    else:
+        subprocess.run(["brew", "install", "hdf5"])
+    if "arm64" in platform.platform():
+        kallisto = "./kallisto_as"
+    elif "x86_64" in platform.platform():
+        kallisto = "./kallisto_intel"
 elif "Linux" in platform.platform():
     kallisto = "./kallisto_linux"
-
-# This will check to see if several important system programs are installed in hierarchical order
-# If they are not, then it executes a script to install them, may require user password.
-if not shutil.which('xcode-select'):
-   if not shutil.which('brew'):
-      subprocess.run(['./brew_installer.sh'])
-   else:
-      subprocess.run(["brew", "install", "hdf5"])
+    subprocess.run(["sudo", "apt-get", "install", "libhdf5-dev"])
 
 from termcolor import colored, cprint
 import Bio
