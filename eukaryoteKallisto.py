@@ -15,8 +15,10 @@ os.chdir(script_path)
 
 if "arm64" in platform.platform():
     kallisto = "./kallisto_as"
-elif "x86_64" in platform.platform():
+elif "x86_64-i386" in platform.platform():
     kallisto = "./kallisto_intel"
+elif "Linux" in platform.platform():
+    kallisto = "./kallisto_linux"
 
 # This will check to see if several important system programs are installed in hierarchical order
 # If they are not, then it executes a script to install them, may require user password.
